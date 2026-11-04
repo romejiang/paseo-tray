@@ -38,9 +38,7 @@ A macOS menu bar tray for [Paseo](https://paseo.sh), plus a thin Paseo plugin.
 
 ## Checksum
 
-```text
-SHA256 (PaseoTray-0.1.0.dmg) = 32745dc6721f17a0a967a63d56d2ebc062a88193a1abe847d79e07c11361f8e9
-```
+See the `PaseoTray-0.1.0.dmg.sha256` asset next to the DMG.
 
 ## Known limitations
 
