@@ -428,3 +428,50 @@ shasum -a 256 tray/build/PaseoTray.app/Contents/MacOS/PaseoTray \
 
 - 图标变更后重新跑 `node test/acceptance.mjs`：**ALL PASS**。
 - 最终 build 与安装版 sha256 一致：`9e24dbc65155f7bd5de166cc44f3086cb500c37595ba45bd5d0deb8ed167a6c0`。
+
+## 15. 分发与安装检测
+
+### Universal build
+
+```bash
+./tray/build-universal.sh
+# Architectures in the fat file: x86_64 arm64
+./tray/build-universal/PaseoTray.app/Contents/MacOS/PaseoTray --self-check
+# self-check: OK (32 assertions)
+arch -x86_64 ./tray/build-universal/PaseoTray.app/Contents/MacOS/PaseoTray --self-check
+# self-check: OK (32 assertions)
+```
+
+### DMG
+
+```bash
+./scripts/package-release.sh 0.1.0
+# dist/PaseoTray-0.1.0.dmg
+# SHA256: 32745dc6721f17a0a967a63d56d2ebc062a88193a1abe847d79e07c11361f8e9
+```
+
+当前是 ad-hoc 签名，仅用于本地/草稿验证；正式发布需要 Developer ID + notarization。
+
+### GitHub
+
+- 公开仓库：<https://github.com/romejiang/paseo-tray>
+- 草稿 Release：`v0.1.0`，已上传 `PaseoTray-0.1.0.dmg`（未发布）。
+- 公开历史使用一个干净的 initial commit；本地 `main` 保留阶段提交历史。
+
+### Homebrew
+
+- Tap：<https://github.com/romejiang/homebrew-tap>
+- Cask：`paseo-tray`，当前指向 `v0.1.0` 的 DMG；签名版发布后运行：
+
+```bash
+scripts/publish-homebrew.sh 0.1.0
+```
+
+### 插件安装检测
+
+```bash
+node test/plugin-settings-probe.mjs
+# PASS  tray.app.status installed path=~/Applications/PaseoTray.app version=0.1.0
+```
+
+插件 settings 页新增“托盘 App / 安装状态 / 下载 / 重新检测”；agents screen 在未安装时显示下载提醒。已安装路径和版本通过真实 daemon RPC 验证；未安装分支因机器锁屏未做视觉截图，逻辑为同一 RPC 的 `installed:false` 分支。
