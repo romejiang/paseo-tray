@@ -240,6 +240,12 @@ dist/PaseoTray-0.1.0.dmg
 dist/PaseoTray-0.1.0.dmg.sha256
 ```
 
+发布 Homebrew cask（GitHub Release 已发布后）：
+
+```bash
+scripts/publish-homebrew.sh 0.1.0
+```
+
 GitHub Actions 模板在 `packaging/github/release.yml`，Homebrew cask 模板在 `packaging/homebrew/Casks/paseo-tray.rb`。两者的配置步骤见对应 README。
 
 ### 版本兼容

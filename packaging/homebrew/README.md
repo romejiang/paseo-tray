@@ -8,38 +8,20 @@ brew install --cask romejiang/tap/paseo-tray
 
 ## First-time tap setup
 
-```bash
-gh repo create romejiang/homebrew-tap --public --description "Homebrew tap for romejiang"
-```
-
-Clone it, create `Casks/`, and copy the cask:
-
-```bash
-git clone https://github.com/romejiang/homebrew-tap.git
-mkdir -p homebrew-tap/Casks
-cp packaging/homebrew/Casks/paseo-tray.rb homebrew-tap/Casks/
-```
-
-After the first signed release, update the version and SHA:
-
-```bash
-scripts/update-cask.sh 0.1.0
-cp packaging/homebrew/Casks/paseo-tray.rb homebrew-tap/Casks/
-cd homebrew-tap
-git add Casks/paseo-tray.rb
-git commit -m "paseo-tray 0.1.0"
-git push
-```
+The tap already exists at <https://github.com/romejiang/homebrew-tap>.
 
 ## Each release
 
+After the GitHub Release is published:
+
 ```bash
 ./scripts/package-release.sh 0.1.0
-scripts/update-cask.sh 0.1.0
+scripts/publish-homebrew.sh 0.1.0
 ```
 
-Then copy the cask to the tap and push. The cask `sha256` must match the
-published DMG; never publish a cask with a placeholder checksum.
+`publish-homebrew.sh` updates the cask `version`/`sha256`, clones the tap,
+commits, and pushes. The cask `sha256` must match the published DMG; never
+publish a cask with a placeholder checksum.
 
 ## Notes
 
