@@ -474,4 +474,11 @@ node test/plugin-settings-probe.mjs
 # PASS  tray.app.status installed path=~/Applications/PaseoTray.app version=0.1.0
 ```
 
-插件 settings 页新增“托盘 App / 安装状态 / 下载 / 重新检测”；agents screen 在未安装时显示下载提醒。已安装路径和版本通过真实 daemon RPC 验证；未安装分支因机器锁屏未做视觉截图，逻辑为同一 RPC 的 `installed:false` 分支。
+插件 settings 页新增“托盘 App / 安装状态 / 下载 / 重新检测”；agents screen 在未安装时显示下载提醒。已安装路径和版本通过真实 daemon RPC 验证；未安装分支也通过真实 RPC 验证（临时移走 `PaseoTray.app`）：
+
+```bash
+PASEOTRAY_EXPECT_INSTALLED=0 node test/plugin-settings-probe.mjs
+# PASS  tray.app.status not installed download=https://github.com/romejiang/paseo-tray/releases/latest
+```
+
+视觉截图仍受锁屏限制，但两个分支的 RPC 都已实际验证。

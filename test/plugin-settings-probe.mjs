@@ -159,16 +159,27 @@ try {
   }
 
   const appStatus = await invoke("tray.app.status", {});
-  if (
-    appStatus?.installed === true &&
-    typeof appStatus.path === "string" &&
-    typeof appStatus.version === "string"
+  const expectInstalled = process.env.PASEOTRAY_EXPECT_INSTALLED !== "0";
+  if (expectInstalled) {
+    if (
+      appStatus?.installed === true &&
+      typeof appStatus.path === "string" &&
+      typeof appStatus.version === "string"
+    ) {
+      console.log(
+        `PASS  tray.app.status installed path=${appStatus.path} version=${appStatus.version}`,
+      );
+    } else {
+      fail(`tray.app.status returned ${JSON.stringify(appStatus)}`);
+    }
+  } else if (
+    appStatus?.installed === false &&
+    typeof appStatus.downloadUrl === "string" &&
+    appStatus.downloadUrl.includes("/releases/latest")
   ) {
-    console.log(
-      `PASS  tray.app.status installed path=${appStatus.path} version=${appStatus.version}`,
-    );
+    console.log(`PASS  tray.app.status not installed download=${appStatus.downloadUrl}`);
   } else {
-    fail(`tray.app.status returned ${JSON.stringify(appStatus)}`);
+    fail(`tray.app.status expected uninstalled, got ${JSON.stringify(appStatus)}`);
   }
 
   const config = JSON.parse(readFileSync(configPath, "utf8"));
