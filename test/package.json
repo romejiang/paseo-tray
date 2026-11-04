@@ -1,0 +1,12 @@
+{
+  "name": "paseo-tray-test-harness",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "mock": "node mock-daemon.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

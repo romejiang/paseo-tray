@@ -1,0 +1,87 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version without the v prefix (for example 0.1.0)"
+        required: true
+        default: "0.1.0"
+      draft:
+        description: "Create a draft release"
+        type: boolean
+        default: true
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    env:
+      HAS_SIGNING_CERT: ${{ secrets.MACOS_CERTIFICATE_P12 != '' }}
+      HAS_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY != '' }}
+      HAS_NOTARY: ${{ secrets.APPLE_ID != '' && secrets.APPLE_TEAM_ID != '' && secrets.APPLE_APP_PASSWORD != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Import Developer ID certificate
+        if: env.HAS_SIGNING_CERT == 'true'
+        env:
+          CERT_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          CERT_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p actions build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p actions build.keychain
+          security import "$RUNNER_TEMP/cert.p12" \
+            -k build.keychain \
+            -P "$CERT_PASSWORD" \
+            -T /usr/bin/codesign
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: \
+            -s -k actions build.keychain
+
+      - name: Require signing and notarization for tag releases
+        if: startsWith(github.ref, 'refs/tags/') && (env.HAS_SIGN_IDENTITY != 'true' || env.HAS_NOTARY != 'true')
+        run: |
+          echo "::error::Set MACOS_SIGN_IDENTITY, certificate, and notarization secrets before tagging a release."
+          exit 1
+
+      - name: Package DMG
+        env:
+          PASEOTRAY_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: ./scripts/package-release.sh "${{ steps.version.outputs.version }}"
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PaseoTray-${{ steps.version.outputs.version }}
+          path: dist/*.dmg
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Paseo Tray ${{ steps.version.outputs.version }}
+          files: dist/*.dmg
+          draft: ${{ inputs.draft || false }}
+          generate_release_notes: true

@@ -1,0 +1,8 @@
+{
+  "id": "paseo-tray",
+  "name": "Paseo Tray",
+  "description": "In-app mirror and settings for the Paseo macOS menu bar tray.",
+  "requirements": {
+    "paseo": ">=0.14.0"
+  }
+}

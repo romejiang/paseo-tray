@@ -1,0 +1,10 @@
+node_modules/
+tray/build/
+tray/build-universal/
+.DS_Store
+*.log
+/test/.home/
+/test/.*-home/
+/test/.*-config.json
+/test/tmp/
+dist/
