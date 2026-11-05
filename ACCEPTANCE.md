@@ -450,29 +450,46 @@ arch -x86_64 ./tray/build-universal/PaseoTray.app/Contents/MacOS/PaseoTray --sel
 # SHA256: 32745dc6721f17a0a967a63d56d2ebc062a88193a1abe847d79e07c11361f8e9
 ```
 
-Developer ID Application 证书已导入（`Developer ID Application: Shaanxi Wanwu Jieshu Education Technology Co., Ltd. (PW3767GAB4)`），签名版 DMG：
+Developer ID Application 证书已导入（`Developer ID Application: Shaanxi Wanwu Jieshu Education Technology Co., Ltd. (PW3767GAB4)`），签名并公证的 DMG：
 
 ```text
 dist/PaseoTray-0.1.0.dmg
-SHA256: 8e2eb2e6fff74018beb78331af04cf72b8593481da19ee9161c850373079c8c7
+SHA256: b52f08185239555e30c84a88769d9db2adc295b60af18fec31a1e379aef02470
 ```
 
-`codesign --verify` 通过；`spctl` 当前为 `rejected / Unnotarized Developer ID`。草稿 Release 已替换为签名版，但**未公证，未发布**。公证只差 app-specific password；拿到后运行 `PASEOTRAY_NOTARY_PROFILE=PaseoTrayNotary ./scripts/package-release.sh 0.1.0`。
+验证结果：
+
+```bash
+xcrun stapler validate dist/PaseoTray-0.1.0.dmg
+# The validate action worked!
+
+spctl -a -vv -t exec /Applications/PaseoTray.app
+# accepted
+# source=Notarized Developer ID
+# origin=Developer ID Application: Shaanxi Wanwu Jieshu Education Technology Co., Ltd. (PW3767GAB4)
+```
+
+公证提交 `87bc5c31-6e78-4ecc-8143-366be6157fe1` 已被 Apple 接受，DMG 已装订 notarization ticket。
 
 ### GitHub
 
 - 公开仓库：<https://github.com/romejiang/paseo-tray>
-- 草稿 Release：`v0.1.0`，已上传 `PaseoTray-0.1.0.dmg`（未发布）。
+- Release：<https://github.com/romejiang/paseo-tray/releases/tag/v0.1.0>（已发布，非草稿）。
+- 资产：`PaseoTray-0.1.0.dmg`、`PaseoTray-0.1.0.dmg.sha256`。
 - 公开历史使用一个干净的 initial commit；本地 `main` 保留阶段提交历史。
 
 ### Homebrew
 
 - Tap：<https://github.com/romejiang/homebrew-tap>
-- Cask：`paseo-tray`，当前指向 `v0.1.0` 的 DMG；签名版发布后运行：
+- Cask：`paseo-tray 0.1.0`，SHA256 与 Release 资产一致；Homebrew 7 需要先信任 tap：
 
 ```bash
-scripts/publish-homebrew.sh 0.1.0
+brew tap romejiang/tap
+brew trust romejiang/tap
+brew install --cask romejiang/tap/paseo-tray
 ```
+
+`brew info --cask romejiang/tap/paseo-tray` 已验证可读取到 `0.1.0`。`brew install --cask` 未执行（可能要求管理员密码）。
 
 ### 插件安装检测
 

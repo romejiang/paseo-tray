@@ -29,20 +29,16 @@ Paseo 的 macOS 菜单栏托盘，外加一个薄 Paseo 插件。托盘是独立
 
 ### GitHub Releases
 
-正式版发布后：
-
 1. 打开 [Releases](https://github.com/romejiang/paseo-tray/releases/latest)。
 2. 下载 `PaseoTray-<version>.dmg`。
 3. 把 `PaseoTray.app` 拖进 `/Applications`。
 4. 首次启动后，菜单栏会出现 Paseo logo。
 
-> 首个正式版正在准备 Developer ID 签名与公证。发布前请使用下面的源码构建；源码构建是 ad-hoc 签名，只适合本机使用。
-
 ### Homebrew
 
-首个签名 Release 发布后：
-
 ```bash
+brew tap romejiang/tap
+brew trust romejiang/tap
 brew install --cask romejiang/tap/paseo-tray
 ```
 
