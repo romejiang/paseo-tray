@@ -223,13 +223,28 @@ cd plugin && npm run typecheck
 
 ### 发布
 
-```bash
-# 通用二进制 + ad-hoc（本机测试）
-./scripts/package-release.sh 0.1.0
+首次申请 Developer ID Application 证书：
 
-# Developer ID 签名 + 公证（正式发布）
+```bash
+# 生成 CSR；私钥留在本机，不提交
+./scripts/create-developer-id-csr.sh
+
+# Account Holder 在 developer.apple.com 上传 CSR 并下载 .cer 后
+./scripts/install-developer-id.sh ~/Downloads/DeveloperIDApplication.cer
+```
+
+通用二进制 + ad-hoc（本机测试）：
+
+```bash
+./scripts/package-release.sh 0.1.0
+```
+
+Developer ID 签名 + 公证（正式发布）：
+
+```bash
 PASEOTRAY_SIGN_IDENTITY="Developer ID Application: ..." \
-APPLE_ID="..." APPLE_TEAM_ID="..." APPLE_APP_PASSWORD="..." \
+PASEOTRAY_SIGN_KEYCHAIN="$HOME/.paseo-tray-signing/PaseoTray.keychain-db" \
+PASEOTRAY_NOTARY_PROFILE="PaseoTrayNotary" \
 ./scripts/package-release.sh 0.1.0
 ```
 

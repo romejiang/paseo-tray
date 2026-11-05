@@ -9,6 +9,7 @@ DIST="$ROOT/dist"
 DMG="$DIST/PaseoTray-$VERSION.dmg"
 
 SIGN_IDENTITY="${PASEOTRAY_SIGN_IDENTITY:-}"
+SIGN_KEYCHAIN="${PASEOTRAY_SIGN_KEYCHAIN:-}"
 NOTARY_PROFILE="${PASEOTRAY_NOTARY_PROFILE:-}"
 APPLE_ID="${APPLE_ID:-}"
 APPLE_TEAM_ID="${APPLE_TEAM_ID:-}"
@@ -19,13 +20,17 @@ echo "==> Building Paseo Tray $VERSION"
 
 if [[ -n "$SIGN_IDENTITY" && "$SIGN_IDENTITY" != "-" ]]; then
   echo "==> Signing with Developer ID: $SIGN_IDENTITY"
-  codesign \
-    --force \
-    --options runtime \
-    --timestamp \
-    --sign "$SIGN_IDENTITY" \
-    --identifier sh.paseo.tray \
-    "$APP"
+  CODESIGN_ARGS=(
+    --force
+    --options runtime
+    --timestamp
+    --sign "$SIGN_IDENTITY"
+    --identifier sh.paseo.tray
+  )
+  if [[ -n "$SIGN_KEYCHAIN" ]]; then
+    CODESIGN_ARGS+=(--keychain "$SIGN_KEYCHAIN")
+  fi
+  codesign "${CODESIGN_ARGS[@]}" "$APP"
   codesign --verify --deep --strict --verbose=2 "$APP"
 else
   echo "WARNING: PASEOTRAY_SIGN_IDENTITY is not set; this is an ad-hoc build."
