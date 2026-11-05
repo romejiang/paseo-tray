@@ -70,7 +70,7 @@ else
   echo "         Set PASEOTRAY_NOTARY_PROFILE or APPLE_ID + APPLE_TEAM_ID + APPLE_APP_PASSWORD."
 fi
 
-shasum -a 256 "$DMG" | tee "$DMG.sha256"
+(cd "$DIST" && shasum -a 256 "PaseoTray-$VERSION.dmg") | tee "$DMG.sha256"
 echo ""
 echo "DMG:    $DMG"
 echo "SHA256: $(cut -d' ' -f1 "$DMG.sha256")"

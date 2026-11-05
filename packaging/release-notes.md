@@ -2,9 +2,9 @@
 
 A macOS menu bar tray for [Paseo](https://paseo.sh), plus a thin Paseo plugin.
 
-> This is a draft release. The published build will be signed with a Developer ID
-> Application certificate and notarized by Apple. The draft asset is an unsigned
-> local test build and is not suitable for general distribution.
+> This is a draft release. The DMG is signed with a Developer ID Application
+> certificate but is **not yet notarized**. Do not publish it until Apple
+> notarization completes and the notarization ticket is stapled.
 
 ## Install
 
