@@ -450,7 +450,14 @@ arch -x86_64 ./tray/build-universal/PaseoTray.app/Contents/MacOS/PaseoTray --sel
 # SHA256: 32745dc6721f17a0a967a63d56d2ebc062a88193a1abe847d79e07c11361f8e9
 ```
 
-当前是 ad-hoc 签名，仅用于本地/草稿验证；正式发布需要 Developer ID + notarization。
+Developer ID Application 证书已导入（`Developer ID Application: Shaanxi Wanwu Jieshu Education Technology Co., Ltd. (PW3767GAB4)`），签名版 DMG：
+
+```text
+dist/PaseoTray-0.1.0.dmg
+SHA256: 8e2eb2e6fff74018beb78331af04cf72b8593481da19ee9161c850373079c8c7
+```
+
+`codesign --verify` 通过；`spctl` 当前为 `rejected / Unnotarized Developer ID`。草稿 Release 已替换为签名版，但**未公证，未发布**。公证只差 app-specific password；拿到后运行 `PASEOTRAY_NOTARY_PROFILE=PaseoTrayNotary ./scripts/package-release.sh 0.1.0`。
 
 ### GitHub
 
