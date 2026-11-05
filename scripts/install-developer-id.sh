@@ -18,18 +18,28 @@ if [[ ! -f "$KEY" ]]; then
   exit 1
 fi
 
-if openssl x509 -in "$CERT" -noout >/dev/null 2>&1; then
+if grep -q "BEGIN CERTIFICATE" "$CERT"; then
   cp "$CERT" "$PEM"
 else
   openssl x509 -inform DER -in "$CERT" -out "$PEM"
 fi
 
-openssl pkcs12 -export \
+rm -f "$P12"
+# macOS `security import` does not accept OpenSSL 3/4's default PBES2 p12.
+# Use the legacy RC2/3DES encoding; fall back for older OpenSSL.
+if ! openssl pkcs12 -export -legacy \
   -inkey "$KEY" \
   -in "$PEM" \
   -out "$P12" \
   -passout "pass:$P12_PASSWORD" \
-  -name "Paseo Tray Developer ID"
+  -name "Paseo Tray Developer ID" 2>/dev/null; then
+  openssl pkcs12 -export \
+    -inkey "$KEY" \
+    -in "$PEM" \
+    -out "$P12" \
+    -passout "pass:$P12_PASSWORD" \
+    -name "Paseo Tray Developer ID"
+fi
 
 chmod 600 "$P12" "$PEM"
 

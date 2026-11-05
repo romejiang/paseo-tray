@@ -233,6 +233,15 @@ cd plugin && npm run typecheck
 ./scripts/install-developer-id.sh ~/Downloads/DeveloperIDApplication.cer
 ```
 
+如果团队已经开通 App Store Connect API，并且 Account Holder 创建了 **Admin** 角色的 API key，也可以全自动申请（注意：不是 APNs 的 `AuthKey_*.p8`）：
+
+```bash
+ASC_ISSUER_ID="..." \
+ASC_KEY_ID="..." \
+ASC_PRIVATE_KEY_PATH="$HOME/Downloads/AuthKey_XXXX.p8" \
+node scripts/create-developer-id-via-api.mjs
+```
+
 通用二进制 + ad-hoc（本机测试）：
 
 ```bash
