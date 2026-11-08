@@ -1,12 +1,22 @@
 {
   "id": "paseo-tray",
   "name": "Paseo Tray",
-  "description": "In-app mirror and settings for the Paseo macOS menu bar tray.",
+  "description": "See every running, finished, and needs-input Paseo agent in your macOS menu bar, and jump straight to the one that needs you.",
   "requirements": {
     "paseo": ">=0.14.0"
   },
   "icon": "assets/icon.png",
   "media": [
+    "assets/tray-menu.png",
+    "assets/menu-bar.png",
+    "assets/agents.png",
+    "assets/sidebar.png",
     "assets/settings.png"
-  ]
+  ],
+  "translations": {
+    "zh-CN": {
+      "name": "Paseo Tray",
+      "description": "在 macOS 菜单栏实时查看 Paseo agent 的运行、完成和待处理数量，点一下就能跳到需要你的 agent。"
+    }
+  }
 }
