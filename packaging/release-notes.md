@@ -1,13 +1,20 @@
-# Paseo Tray 0.1.0
+# Paseo Tray 0.1.1
 
 A macOS menu bar tray for [Paseo](https://paseo.sh), plus a thin Paseo plugin.
 
 > This release is signed with a Developer ID Application certificate and
 > notarized by Apple. The DMG has a stapled notarization ticket.
 
+## What's fixed
+
+- The tray now declares the `all_providers` capability in its daemon hello.
+  Previously the daemon treated the tray as a legacy client and only returned
+  claude/codex/opencode agents, so agents from other providers (kimi, pi, and
+  newer providers) were missing from the menu bar counts entirely.
+
 ## Install
 
-1. Download `PaseoTray-0.1.0.dmg`.
+1. Download `PaseoTray-0.1.1.dmg`.
 2. Open it and drag `PaseoTray.app` into `/Applications`.
 3. Launch Paseo Tray. The Paseo logo appears in the menu bar.
 4. Install the Paseo plugin:
@@ -37,10 +44,10 @@ A macOS menu bar tray for [Paseo](https://paseo.sh), plus a thin Paseo plugin.
 
 ## Checksum
 
-See the `PaseoTray-0.1.0.dmg.sha256` asset next to the DMG.
+See the `PaseoTray-0.1.1.dmg.sha256` asset next to the DMG.
 
 ## Known limitations
 
 - Only `host:port` daemon endpoints are supported.
-- Local daemon only; multi-host and relay are out of scope for 0.1.0.
+- Local daemon only; multi-host and relay are out of scope.
 - Menu bar items can be hidden by menu bar managers such as Hidden Bar.

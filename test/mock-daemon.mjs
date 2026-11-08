@@ -40,6 +40,14 @@ const agents = new Map();
 const agentSubscribers = new Map();
 const eventSubscribers = new Map();
 const fetchCounts = new WeakMap();
+// Mirrors the real daemon: clients outside the Paseo app version series only
+// see legacy providers unless hello declares `all_providers: true`.
+const legacyProviders = new Set(["claude", "codex", "opencode"]);
+const acceptsAllProviders = new WeakMap();
+
+function isAgentVisible(ws, agent) {
+  return legacyProviders.has(agent.provider) || acceptsAllProviders.get(ws) === true;
+}
 
 function makeAgent(input) {
   const now = new Date().toISOString();
@@ -99,6 +107,7 @@ function sendSession(ws, message) {
 
 function broadcastAgent(agent) {
   for (const [ws, subscriptionId] of agentSubscribers) {
+    if (!isAgentVisible(ws, agent)) continue;
     sendSession(ws, {
       type: "agent_update",
       payload: {
@@ -259,6 +268,7 @@ wss.on("connection", (ws) => {
       return;
     }
     if (frame.type === "hello") {
+      acceptsAllProviders.set(ws, frame.capabilities?.all_providers === true);
       if (authMode === "reject") {
         send(ws, { type: "hello.rejected", reason: "password_required", accepts: ["password"] });
         return;
@@ -323,10 +333,12 @@ wss.on("connection", (ws) => {
         payload: {
           requestId: message.requestId,
           subscriptionId,
-          entries: [...agents.values()].map((agent) => ({
-            agent,
-            project: projectFor(agent),
-          })),
+          entries: [...agents.values()]
+            .filter((agent) => isAgentVisible(ws, agent))
+            .map((agent) => ({
+              agent,
+              project: projectFor(agent),
+            })),
           pageInfo: { nextCursor: null, prevCursor: null, hasMore },
         },
       });

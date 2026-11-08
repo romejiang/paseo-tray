@@ -102,12 +102,16 @@ hello：
   "capabilities": {
     "owned_subscriptions": true,
     "explicit_event_subscriptions": true,
-    "hello_rejection": true
+    "hello_rejection": true,
+    "all_providers": true
   }
 }
 ```
 
 `clientId` 用 `UserDefaults` 持久化。`clientType` 是 `cli`，不伪装 browser/mobile。
+`all_providers` 必须声明：daemon 对不在 Paseo app 版本序列里的客户端只暴露
+claude/codex/opencode 三种 legacy provider（`appVersion < 0.1.45` 时），其余
+provider（kimi、pi 等）的 agent 会从快照和增量更新里整体消失，托盘计数随之偏少。
 
 ### 3.4 agent 目录订阅
 

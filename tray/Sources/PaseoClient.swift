@@ -344,6 +344,10 @@ final class PaseoClient {
                 "owned_subscriptions": true,
                 "explicit_event_subscriptions": true,
                 "hello_rejection": true,
+                // The tray is outside the Paseo app version series, so the
+                // daemon only shows claude/codex/opencode agents unless we
+                // explicitly accept arbitrary provider IDs.
+                "all_providers": true,
             ],
         ]
         if let token, !token.isEmpty {
