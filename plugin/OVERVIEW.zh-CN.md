@@ -43,8 +43,18 @@ Paseo 不在前台时，新的完成、失败、权限事件会让菜单栏图�
 
 Paseo Tray 要求 macOS 13 或更高版本，以及 Paseo 0.14.0 或更高版本。
 
-1. 从项目的 GitHub Releases 安装 **Paseo Tray** macOS App，放进
-   `/Applications` 或 `~/Applications`。
+1. 安装 **Paseo Tray** macOS App：
+   - 从 [GitHub Releases](https://github.com/romejiang/paseo-tray/releases/latest)
+     下载 `PaseoTray-<version>.dmg`，把 `PaseoTray.app` 拖进 `/Applications`。
+   - 或用 Homebrew：
+
+     ```bash
+     brew tap romejiang/tap
+     brew trust romejiang/tap
+     brew install --cask romejiang/tap/paseo-tray
+     ```
+
+     升级用 `brew upgrade --cask paseo-tray`，卸载用 `brew uninstall --cask paseo-tray`。
 2. App 启动后菜单栏就会出现图标。只有想要系统横幅通知时才需要允许通知；闪烁提醒
    不依赖通知权限。
 

@@ -54,8 +54,20 @@ without allowing banners.
 
 Paseo Tray requires macOS 13 or later and Paseo 0.14.0 or later.
 
-1. Install the **Paseo Tray** macOS app from the project's GitHub Releases, and
-   move it to `/Applications` or `~/Applications`.
+1. Install the **Paseo Tray** macOS app:
+   - From [GitHub Releases](https://github.com/romejiang/paseo-tray/releases/latest):
+     download `PaseoTray-<version>.dmg` and drag `PaseoTray.app` into
+     `/Applications`.
+   - Or with Homebrew:
+
+     ```bash
+     brew tap romejiang/tap
+     brew trust romejiang/tap
+     brew install --cask romejiang/tap/paseo-tray
+     ```
+
+     Upgrade with `brew upgrade --cask paseo-tray`; uninstall with
+     `brew uninstall --cask paseo-tray`.
 2. The menu bar icon appears as soon as the app launches. Allow notifications
    only if you want system banners; the flashing icon works without them.
 
